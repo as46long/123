@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "乐语匣子",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "music-bar": "/components/music-bar/music-bar"
+  }
+}

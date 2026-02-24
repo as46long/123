@@ -1,0 +1,41 @@
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar" bindtap="onSearchTap">
+    <text class="search-icon">🔍</text>
+    <text class="search-placeholder">搜索歌曲、歌手、专辑</text>
+  </view>
+
+  <!-- 分类入口 -->
+  <view class="categories">
+    <view class="category-item" wx:for="{{categories}}" wx:key="*this" data-category="{{item}}" bindtap="onCategoryTap">
+      {{item}}
+    </view>
+  </view>
+
+  <!-- 推荐歌曲 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">为你推荐</text>
+      <text class="play-all" bindtap="onPlayAllTap">▶ 播放全部</text>
+    </view>
+    
+    <view wx:if="{{loading}}" class="loading">加载中...</view>
+    
+    <view wx:else class="song-list">
+      <view class="song-item" wx:for="{{recommendSongs}}" wx:key="id" data-song="{{item}}" bindtap="onSongTap">
+        <image class="song-cover" src="{{item.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
+        <view class="song-info">
+          <view class="song-title">
+            {{item.title}}
+            <text wx:if="{{item.isVip}}" class="vip-tag">VIP</text>
+          </view>
+          <view class="song-artist">{{item.artist}} - {{item.album}}</view>
+        </view>
+        <text class="play-icon">▶</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 底部播放条 -->
+<music-bar />

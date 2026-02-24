@@ -1,0 +1,34 @@
+<view class="vip-page">
+  <!-- 用户状态 -->
+  <view class="user-card" wx:if="{{userInfo}}">
+    <image class="avatar" src="{{userInfo.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill" />
+    <view class="user-info">
+      <view class="nickname">{{userInfo.nickname || userInfo.username}}</view>
+      <view class="vip-status">
+        <text wx:if="{{userInfo.isVip}}">👑 VIP会员 | 到期：{{userInfo.vipExpireTime}}</text>
+        <text wx:else>开通VIP，畅享海量音乐</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 套餐选择 -->
+  <view class="packages">
+    <view class="package {{selectedPackage === index ? 'active' : ''}} {{item.recommend ? 'recommend' : ''}}" wx:for="{{packages}}" wx:key="type" data-index="{{index}}" bindtap="selectPackage">
+      <view wx:if="{{item.recommend}}" class="recommend-tag">推荐</view>
+      <view class="package-name">{{item.name}}</view>
+      <view class="package-price">¥{{item.price}}</view>
+      <view class="package-desc">{{item.desc}}</view>
+    </view>
+  </view>
+
+  <!-- VIP权益 -->
+  <view class="benefits">
+    <view class="section-title">VIP特权</view>
+    <view class="benefit-item">✓ 无限畅听VIP专属歌曲</view>
+    <view class="benefit-item">✓ 高品质音乐下载</view>
+    <view class="benefit-item">✓ 免广告特权</view>
+    <view class="benefit-item">✓ 专属会员标识</view>
+  </view>
+
+  <button class="primary-btn pay-btn" bindtap="handlePay">立即开通</button>
+</view>

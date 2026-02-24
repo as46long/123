@@ -1,0 +1,10 @@
+<view class="music-bar {{show ? '' : 'hidden'}}" bindtap="onTap" wx:if="{{song}}">
+  <image class="cover" src="{{song.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
+  <view class="info">
+    <view class="title">{{song.title}}</view>
+    <view class="artist">{{song.artist}}</view>
+  </view>
+  <view class="play-btn" catchtap="togglePlay">
+    {{isPlaying ? '⏸' : '▶'}}
+  </view>
+</view>

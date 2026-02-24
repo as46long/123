@@ -1,0 +1,24 @@
+<view class="login-page">
+  <view class="login-box">
+    <view class="logo">🎵</view>
+    <view class="title">乐语匣子</view>
+    
+    <view class="form">
+      <input class="input" placeholder="用户名" value="{{username}}" bindinput="onUsernameInput" />
+      <input class="input" placeholder="密码" password value="{{password}}" bindinput="onPasswordInput" />
+      <input wx:if="{{isRegister}}" class="input" placeholder="昵称（可选）" value="{{nickname}}" bindinput="onNicknameInput" />
+      
+      <button class="primary-btn submit-btn" bindtap="handleSubmit">
+        {{isRegister ? '注册' : '登录'}}
+      </button>
+      
+      <button class="wx-btn" open-type="getPhoneNumber" bindgetphonenumber="handleWxLogin">
+        <text class="wx-icon">💚</text> 微信一键登录
+      </button>
+      
+      <view class="switch-mode" bindtap="toggleMode">
+        {{isRegister ? '已有账号？去登录' : '没有账号？去注册'}}
+      </view>
+    </view>
+  </view>
+</view>

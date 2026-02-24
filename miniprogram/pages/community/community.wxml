@@ -1,0 +1,29 @@
+<view class="community-page">
+  <!-- 发布留言 -->
+  <view class="post-box">
+    <textarea class="input" placeholder="说点什么吧..." value="{{content}}" bindinput="onInput" maxlength="200" />
+    <view class="post-actions">
+      <text class="char-count">{{content.length}}/200</text>
+      <button class="primary-btn submit-btn" bindtap="submitComment">发布</button>
+    </view>
+  </view>
+
+  <!-- 留言列表 -->
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+  <view wx:else class="comment-list">
+    <view class="comment-item" wx:for="{{comments}}" wx:key="id">
+      <image class="avatar" src="{{item.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill" />
+      <view class="comment-content">
+        <view class="comment-header">
+          <text class="username">{{item.username}}</text>
+          <text class="time">{{item.createTime}}</text>
+        </view>
+        <view class="comment-text">{{item.content}}</view>
+        <view class="comment-actions">
+          <text class="like-btn" data-id="{{item.id}}" bindtap="likeComment">❤️ {{item.likes}}</text>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{comments.length === 0}}" class="empty">暂无留言</view>
+  </view>
+</view>

@@ -1,0 +1,42 @@
+<view class="player-page" wx:if="{{song}}">
+  <!-- 背景模糊 -->
+  <image class="bg-image" src="{{song.coverUrl}}" mode="aspectFill" />
+  <view class="bg-mask" />
+
+  <!-- 歌曲信息 -->
+  <view class="song-info">
+    <image class="cover {{isPlaying ? 'rotating' : ''}}" src="{{song.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
+    <view class="title">{{song.title}}
+      <text wx:if="{{song.isVip}}" class="vip-tag">VIP</text>
+    </view>
+    <view class="artist">{{song.artist}}</view>
+  </view>
+
+  <!-- 歌词 -->
+  <scroll-view class="lyrics-container" scroll-y scroll-into-view="lyric-{{currentLyricIndex}}">
+    <view wx:for="{{lyrics}}" wx:key="index" id="lyric-{{index}}" class="lyric-item {{index === currentLyricIndex ? 'active' : ''}}">
+      {{item.text}}
+    </view>
+  </scroll-view>
+
+  <!-- 进度条 -->
+  <view class="progress">
+    <text class="time">{{formatTime(currentTime)}}</text>
+    <slider class="slider" min="0" max="{{duration}}" value="{{currentTime}}" block-size="12" activeColor="#FF6B9D" backgroundColor="rgba(255,255,255,0.3)" bindchange="onSliderChange" />
+    <text class="time">{{formatTime(duration)}}</text>
+  </view>
+
+  <!-- 控制按钮 -->
+  <view class="controls">
+    <text class="control-btn" bindtap="toggleMode">
+      {{playMode === 'sequence' ? '🔁' : playMode === 'random' ? '🔀' : '🔂'}}
+    </text>
+    <text class="control-btn" bindtap="playPrev">⏮</text>
+    <text class="control-btn play-btn" bindtap="togglePlay">{{isPlaying ? '⏸' : '▶'}}</text>
+    <text class="control-btn" bindtap="playNext">⏭</text>
+    <text class="control-btn {{isFavorite ? 'active' : ''}}" bindtap="toggleFavorite">{{isFavorite ? '❤️' : '🤍'}}</text>
+  </view>
+</view>
+
+<!-- VIP弹窗 -->
+<vip-modal wx:if="{{showVipModal}}" bind:close="{{showVipModal = false}}" bind:confirm="goToVip" />

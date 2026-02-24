@@ -1,0 +1,10 @@
+<view class="vip-modal" wx:if="{{show}}">
+  <view class="mask" bindtap="onClose" />
+  <view class="modal-content">
+    <view class="vip-icon">👑</view>
+    <view class="title">VIP专属歌曲</view>
+    <view class="desc">开通VIP会员，畅听海量高品质音乐</view>
+    <button class="primary-btn" bindtap="onConfirm">立即开通</button>
+    <view class="skip" bindtap="onClose">暂不开通</view>
+  </view>
+</view>

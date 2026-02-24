@@ -1,0 +1,38 @@
+<view class="search-page">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索歌曲、歌手、专辑" value="{{keyword}}" bindinput="onInput" bindconfirm="search" focus />
+    <text wx:if="{{keyword}}" class="clear-btn" bindtap="onClear">×</text>
+    <text class="search-btn" bindtap="search">搜索</text>
+  </view>
+
+  <!-- 搜索结果 -->
+  <view wx:if="{{results.length > 0}}" class="results">
+    <view class="song-item" wx:for="{{results}}" wx:key="id" data-song="{{item}}" bindtap="onSongTap">
+      <image class="song-cover" src="{{item.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
+      <view class="song-info">
+        <view class="song-title">{{item.title}} <text wx:if="{{item.isVip}}" class="vip-tag">VIP</text></view>
+        <view class="song-artist">{{item.artist}} - {{item.album}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索历史 -->
+  <view wx:elif="{{history.length > 0}}" class="history-section">
+    <view class="section-header">
+      <text class="section-title">搜索历史</text>
+      <text class="clear-history" bindtap="clearHistory">清空</text>
+    </view>
+    <view class="history-tags">
+      <text class="history-tag" wx:for="{{history}}" wx:key="*this" data-keyword="{{item}}" bindtap="onHistoryTap">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 热门搜索 -->
+  <view wx:else class="hot-section">
+    <view class="section-title">热门搜索</view>
+    <view class="hot-tags">
+      <text class="hot-tag" wx:for="{{hotKeywords}}" wx:key="*this" data-keyword="{{item}}" bindtap="onHistoryTap">{{item}}</text>
+    </view>
+  </view>
+</view>

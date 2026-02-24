@@ -1,0 +1,112 @@
+.vip-page {
+  padding: 20rpx;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  border-radius: 24rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  border: 4rpx solid rgba(255,255,255,0.5);
+}
+
+.nickname {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 8rpx;
+}
+
+.vip-status {
+  font-size: 24rpx;
+  color: rgba(0,0,0,0.7);
+}
+
+.packages {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+}
+
+.package {
+  flex: 1;
+  background: linear-gradient(145deg, #252542, #1e1e36);
+  border-radius: 16rpx;
+  padding: 30rpx 20rpx;
+  text-align: center;
+  border: 2rpx solid transparent;
+  position: relative;
+}
+
+.package.active {
+  border-color: #FF6B9D;
+}
+
+.package.recommend {
+  background: linear-gradient(145deg, #3d2c5a, #2a1e3e);
+}
+
+.recommend-tag {
+  position: absolute;
+  top: -10rpx;
+  right: 10rpx;
+  background: #FF6B9D;
+  color: #fff;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 10rpx;
+}
+
+.package-name {
+  font-size: 28rpx;
+  color: #fff;
+  margin-bottom: 10rpx;
+}
+
+.package-price {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #FF6B9D;
+  margin-bottom: 10rpx;
+}
+
+.package-desc {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 20rpx;
+}
+
+.benefits {
+  background: linear-gradient(145deg, #252542, #1e1e36);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 40rpx;
+}
+
+.benefit-item {
+  font-size: 28rpx;
+  color: #ccc;
+  margin-bottom: 16rpx;
+}
+
+.pay-btn {
+  position: fixed;
+  bottom: 40rpx;
+  left: 40rpx;
+  right: 40rpx;
+}

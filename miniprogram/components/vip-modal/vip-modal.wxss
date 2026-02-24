@@ -1,0 +1,57 @@
+.vip-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+  position: relative;
+  width: 600rpx;
+  background: linear-gradient(145deg, #252542, #1e1e36);
+  border-radius: 24rpx;
+  padding: 60rpx 40rpx;
+  text-align: center;
+}
+
+.vip-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #FFD700;
+  margin-bottom: 20rpx;
+}
+
+.desc {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 40rpx;
+}
+
+.primary-btn {
+  width: 100%;
+}
+
+.skip {
+  margin-top: 20rpx;
+  font-size: 26rpx;
+  color: #999;
+}

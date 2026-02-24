@@ -1,0 +1,25 @@
+<view class="order-page">
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+  
+  <view wx:elif="{{orders.length === 0}}" class="empty">
+    暂无订单记录
+  </view>
+
+  <view wx:else class="order-list">
+    <view class="order-item" wx:for="{{orders}}" wx:key="id">
+      <view class="order-header">
+        <text class="order-no">订单号：{{item.orderNo}}</text>
+        <text class="order-status {{item.payStatus === 1 ? 'paid' : ''}}">{{item.payStatus === 1 ? '已支付' : '未支付'}}</text>
+      </view>
+      <view class="order-body">
+        <view class="package-name">
+          {{item.packageType === 'MONTH' ? '月卡' : item.packageType === 'QUARTER' ? '季卡' : '年卡'}}
+        </view>
+        <view class="order-amount">¥{{item.amount}}</view>
+      </view>
+      <view class="order-footer">
+        <text>创建时间：{{item.createTime}}</text>
+      </view>
+    </view>
+  </view>
+</view>

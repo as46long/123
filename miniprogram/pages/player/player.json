@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "正在播放",
+  "navigationBarBackgroundColor": "#1a1a2e",
+  "usingComponents": {
+    "vip-modal": "/components/vip-modal/vip-modal"
+  }
+}
