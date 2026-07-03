@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/splash/splash",
     "pages/index/index",
     "pages/player/player",
     "pages/search/search",
@@ -8,28 +9,53 @@
     "pages/order/order",
     "pages/community/community",
     "pages/profile/profile",
-    "pages/login/login"
+    "pages/login/login",
+    "pages/edit-profile/edit-profile",
+    "pages/my-comments/my-comments"
   ],
+  "subPackages": [],
   "window": {
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#1a1a2e",
+    "navigationBarBackgroundColor": "#0D0D1A",
     "navigationBarTitleText": "乐语匣子",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#1a1a2e"
+    "backgroundColor": "#0D0D1A"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#FF6B9D",
-    "backgroundColor": "#1a1a2e",
+    "color": "#666666",
+    "selectedColor": "#F472B6",
+    "backgroundColor": "#0D0D1A",
     "borderStyle": "black",
     "list": [
-      { "pagePath": "pages/index/index", "text": "首页", "iconPath": "static/images/home.png", "selectedIconPath": "static/images/home-active.png" },
-      { "pagePath": "pages/playlist/playlist", "text": "歌单", "iconPath": "static/images/playlist.png", "selectedIconPath": "static/images/playlist-active.png" },
-      { "pagePath": "pages/community/community", "text": "乐语", "iconPath": "static/images/community.png", "selectedIconPath": "static/images/community-active.png" },
-      { "pagePath": "pages/profile/profile", "text": "我的", "iconPath": "static/images/profile.png", "selectedIconPath": "static/images/profile-active.png" }
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/images/home.png",
+        "selectedIconPath": "static/images/home-active.png"
+      },
+      {
+        "pagePath": "pages/playlist/playlist",
+        "text": "歌单",
+        "iconPath": "static/images/playlist.png",
+        "selectedIconPath": "static/images/playlist-active.png"
+      },
+      {
+        "pagePath": "pages/community/community",
+        "text": "乐语",
+        "iconPath": "static/images/community.png",
+        "selectedIconPath": "static/images/community-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "static/images/profile.png",
+        "selectedIconPath": "static/images/profile-active.png"
+      }
     ]
   },
-  "requiredBackgroundModes": ["audio"],
+  "requiredBackgroundModes": [
+    "audio"
+  ],
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

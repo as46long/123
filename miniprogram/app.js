@@ -5,7 +5,9 @@ App({
     audioManager: null,
     currentSong: null,
     playList: [],
-    playMode: 'sequence'
+    playMode: "sequence",
+    playAllList: [],
+    splashShown: false
   },
 
   onLaunch() {
@@ -40,8 +42,18 @@ App({
       const res = await this.request({ url: '/user/info', method: 'GET' })
       this.globalData.userInfo = res.data
     } catch (e) {
-      console.error(e)
+      console.error('获取用户信息失败', e)
+      // Token 无效或过期，清除登录状态
+      if (e.status === 403 || e.code === 401) {
+        this.logout()
+      }
     }
+  },
+
+  logout() {
+    this.globalData.token = ''
+    this.globalData.userInfo = null
+    wx.removeStorageSync('token')
   },
 
   request(options) {
@@ -58,11 +70,18 @@ App({
         success: (res) => {
           if (res.data.code === 200) {
             resolve(res.data)
+          } else if (res.data.code === 401 || res.statusCode === 403) {
+            // 未授权，清除登录状态
+            this.logout()
+            reject({ status: res.statusCode, code: res.data.code, message: '未授权' })
           } else {
             reject(res.data)
           }
         },
-        fail: reject
+        fail: (err) => {
+          console.error('网络请求失败', err)
+          reject(err)
+        }
       })
     })
   }

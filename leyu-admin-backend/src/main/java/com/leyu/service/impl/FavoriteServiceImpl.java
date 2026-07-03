@@ -6,14 +6,18 @@ import com.leyu.entity.Song;
 import com.leyu.mapper.FavoriteMapper;
 import com.leyu.mapper.SongMapper;
 import com.leyu.service.FavoriteService;
-import com.leyu.service.SongService;
 import com.leyu.vo.SongVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 收藏服务实现类
+ * 实现歌曲收藏的添加、删除、查询等功能
+ */
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
 
@@ -23,14 +27,19 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Autowired
     private SongMapper songMapper;
 
-    @Autowired
-    private SongService songService;
-
     @Override
     public List<SongVO> getUserFavorites(Long userId) {
         List<Long> songIds = favoriteMapper.findSongIdsByUserId(userId);
         return songIds.stream()
-                .map(songId -> songService.getVOById(songId, userId))
+                .map(songId -> {
+                    Song song = songMapper.selectById(songId);
+                    if (song == null) return null;
+                    SongVO vo = new SongVO();
+                    BeanUtils.copyProperties(song, vo);
+                    vo.setIsFavorite(true);
+                    return vo;
+                })
+                .filter(vo -> vo != null)
                 .collect(Collectors.toList());
     }
 

@@ -1,10 +1,19 @@
 .playlist-page {
-  padding: 20rpx;
+  padding: 24rpx;
+  padding-bottom: 48rpx;
 }
 
+.playlist-page.has-music-bar {
+  padding-bottom: 180rpx;
+}
+
+/* 标签页 - 玻璃拟态 */
 .tabs {
   display: flex;
-  margin-bottom: 30rpx;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 32rpx;
+  padding: 8rpx;
+  margin-bottom: 32rpx;
 }
 
 .tab {
@@ -12,28 +21,71 @@
   text-align: center;
   padding: 20rpx;
   font-size: 30rpx;
-  color: #999;
-  border-bottom: 4rpx solid transparent;
+  color: rgba(255, 255, 255, 0.5);
+  border-radius: 24rpx;
+  transition: all 0.3s ease;
 }
 
 .tab.active {
-  color: #FF6B9D;
-  border-bottom-color: #FF6B9D;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(244, 114, 182, 0.15);
+  font-weight: 500;
 }
 
 .play-all {
-  color: #FF6B9D;
+  color: #F472B6;
   font-size: 28rpx;
   margin-bottom: 20rpx;
+  padding: 12rpx 24rpx;
+  border-radius: 32rpx;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.play-all:active {
+  background: rgba(244, 114, 182, 0.15);
 }
 
 .loading, .empty {
   text-align: center;
-  padding: 60rpx;
-  color: #999;
+  padding: 80rpx;
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .play-icon {
-  color: #FF6B9D;
+  color: #F472B6;
   font-size: 32rpx;
+}
+
+.lock-icon {
+  font-size: 24rpx;
+  margin-left: 8rpx;
+  opacity: 0.5;
+}
+
+.login-tip {
+  text-align: center;
+  padding: 100rpx 40rpx;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.login-tip text {
+  display: block;
+  margin-bottom: 32rpx;
+}
+
+.login-btn {
+  background: linear-gradient(135deg, #F472B6, #8B5CF6);
+  color: white;
+  border: none;
+  border-radius: 48rpx;
+  padding: 24rpx 64rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  box-shadow: 0 8rpx 24rpx rgba(244, 114, 182, 0.3);
+  transition: all 0.3s ease;
+}
+
+.login-btn:active {
+  transform: scale(0.96);
 }

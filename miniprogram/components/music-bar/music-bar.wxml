@@ -1,10 +1,29 @@
-<view class="music-bar {{show ? '' : 'hidden'}}" bindtap="onTap" wx:if="{{song}}">
-  <image class="cover" src="{{song.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
-  <view class="info">
-    <view class="title">{{song.title}}</view>
-    <view class="artist">{{song.artist}}</view>
+<view class="music-bar {{show && song ? 'show' : ''}}" wx:if="{{show && song}}">
+  <!-- 进度条 -->
+  <view class="progress-line">
+    <view class="progress-fill" style="width: {{progressPercent}}%;"></view>
   </view>
-  <view class="play-btn" catchtap="togglePlay">
-    {{isPlaying ? '⏸' : '▶'}}
+  
+  <view class="bar-content">
+    <!-- 封面 -->
+    <view class="cover-wrapper" bindtap="goToPlayer">
+      <image class="cover {{isPlaying ? 'rotating' : ''}}" src="{{song.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
+    </view>
+    
+    <!-- 歌曲信息 -->
+    <view class="song-info" bindtap="goToPlayer">
+      <view class="song-title">{{song.title}}</view>
+      <view class="song-artist">{{song.artist}}</view>
+    </view>
+    
+    <!-- 控制按钮 -->
+    <view class="controls">
+      <view class="control-btn" catchtap="togglePlay">
+        <text class="btn-icon {{isPlaying ? 'icon-pause' : 'icon-play'}}"></text>
+      </view>
+      <view class="control-btn" catchtap="playNext">
+        <text class="btn-icon icon-next-bar"></text>
+      </view>
+    </view>
   </view>
 </view>

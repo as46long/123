@@ -19,6 +19,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * 订单服务实现类
+ * 实现订单创建、支付处理、查询等功能
+ */
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -28,6 +32,10 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserMapper userMapper;
 
+    /**
+     * 创建订单
+     * 生成唯一订单号，保存订单信息
+     */
     @Override
     public OrderVO create(Long userId, OrderDTO dto) {
         Order order = new Order();
@@ -40,6 +48,10 @@ public class OrderServiceImpl implements OrderService {
         return convertToVO(order);
     }
 
+    /**
+     * 处理支付成功
+     * 更新订单状态、支付时间，计算会员到期时间，更新用户VIP状态
+     */
     @Override
     public void paySuccess(String orderNo) {
         Order order = orderMapper.selectOne(new LambdaQueryWrapper<Order>().eq(Order::getOrderNo, orderNo));
@@ -51,9 +63,16 @@ public class OrderServiceImpl implements OrderService {
 
             // 更新用户VIP状态
             User user = userMapper.selectById(order.getUserId());
-            user.setIsVip(1);
-            user.setVipExpireTime(order.getExpireTime());
-            userMapper.updateById(user);
+            if (user != null) {
+                // 如果已有会员且未过期，在原到期时间基础上延长
+                LocalDateTime baseTime = user.getVipExpireTime();
+                if (baseTime == null || baseTime.isBefore(LocalDateTime.now())) {
+                    baseTime = LocalDateTime.now();
+                }
+                user.setVipExpireTime(calculateExpireTimeFromBase(baseTime, order.getPackageType()));
+                user.setIsVip(1);
+                userMapper.updateById(user);
+            }
         }
     }
 
@@ -91,21 +110,35 @@ public class OrderServiceImpl implements OrderService {
         return voPage;
     }
 
+    /**
+     * 生成订单号
+     * 格式: 时间戳 + 随机UUID片段
+     */
     private String generateOrderNo() {
         return System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8);
     }
 
     private LocalDateTime calculateExpireTime(String packageType) {
-        LocalDateTime now = LocalDateTime.now();
+        return calculateExpireTimeFromBase(LocalDateTime.now(), packageType);
+    }
+
+    /**
+     * 根据套餐类型计算会员到期时间
+     * @param packageType 套餐类型(WEEK/MONTH/QUARTER/YEAR)
+     * @return 到期时间
+     */
+    private LocalDateTime calculateExpireTimeFromBase(LocalDateTime baseTime, String packageType) {
         switch (packageType) {
+            case "WEEK":
+                return baseTime.plusDays(7);
             case "MONTH":
-                return now.plusMonths(1);
+                return baseTime.plusMonths(1);
             case "QUARTER":
-                return now.plusMonths(3);
+                return baseTime.plusMonths(3);
             case "YEAR":
-                return now.plusYears(1);
+                return baseTime.plusYears(1);
             default:
-                return now.plusMonths(1);
+                return baseTime.plusMonths(1);
         }
     }
 

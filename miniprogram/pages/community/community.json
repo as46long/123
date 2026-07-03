@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "乐语互动"
+  "navigationBarTitleText": "乐语互动",
+  "usingComponents": {
+    "music-bar": "/components/music-bar/music-bar"
+  }
 }

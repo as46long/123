@@ -1,13 +1,17 @@
 <view class="search-page">
   <!-- 搜索栏 -->
   <view class="search-bar">
-    <input class="search-input" placeholder="搜索歌曲、歌手、专辑" value="{{keyword}}" bindinput="onInput" bindconfirm="search" focus />
+    <input class="search-input" placeholder="搜索歌曲、歌手、专辑" value="{{keyword}}" bindinput="onInput" bindconfirm="search" />
     <text wx:if="{{keyword}}" class="clear-btn" bindtap="onClear">×</text>
     <text class="search-btn" bindtap="search">搜索</text>
   </view>
 
   <!-- 搜索结果 -->
   <view wx:if="{{results.length > 0}}" class="results">
+    <view class="section-header" wx:if="{{fromCategory}}">
+      <text class="section-title">{{keyword}}精选</text>
+      <text class="play-all" bindtap="onPlayAll">▶ 播放全部</text>
+    </view>
     <view class="song-item" wx:for="{{results}}" wx:key="id" data-song="{{item}}" bindtap="onSongTap">
       <image class="song-cover" src="{{item.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
       <view class="song-info">
@@ -18,7 +22,7 @@
   </view>
 
   <!-- 搜索历史 -->
-  <view wx:elif="{{history.length > 0}}" class="history-section">
+  <view wx:elif="{{history.length > 0 && !fromCategory}}" class="history-section">
     <view class="section-header">
       <text class="section-title">搜索历史</text>
       <text class="clear-history" bindtap="clearHistory">清空</text>

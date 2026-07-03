@@ -1,15 +1,28 @@
 const api = require('../../utils/api')
+const audioManager = require('../../utils/audioManager')
 const app = getApp()
 
 Page({
   data: {
     comments: [],
     content: '',
-    loading: true
+    loading: true,
+    showMusicBar: false
   },
 
   onLoad() {
     this.loadComments()
+  },
+
+  onShow() {
+    this.checkCurrentSong()
+  },
+
+  checkCurrentSong() {
+    const currentSong = audioManager.getCurrentSong()
+    this.setData({
+      showMusicBar: !!currentSong
+    })
   },
 
   async loadComments() {

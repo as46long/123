@@ -1,41 +1,122 @@
-<view class="container">
-  <!-- 搜索栏 -->
-  <view class="search-bar" bindtap="onSearchTap">
-    <text class="search-icon">🔍</text>
-    <text class="search-placeholder">搜索歌曲、歌手、专辑</text>
-  </view>
-
-  <!-- 分类入口 -->
-  <view class="categories">
-    <view class="category-item" wx:for="{{categories}}" wx:key="*this" data-category="{{item}}" bindtap="onCategoryTap">
-      {{item}}
-    </view>
-  </view>
-
-  <!-- 推荐歌曲 -->
-  <view class="section">
-    <view class="section-header">
-      <text class="section-title">为你推荐</text>
-      <text class="play-all" bindtap="onPlayAllTap">▶ 播放全部</text>
-    </view>
-    
-    <view wx:if="{{loading}}" class="loading">加载中...</view>
-    
-    <view wx:else class="song-list">
-      <view class="song-item" wx:for="{{recommendSongs}}" wx:key="id" data-song="{{item}}" bindtap="onSongTap">
-        <image class="song-cover" src="{{item.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
-        <view class="song-info">
-          <view class="song-title">
-            {{item.title}}
-            <text wx:if="{{item.isVip}}" class="vip-tag">VIP</text>
-          </view>
-          <view class="song-artist">{{item.artist}} - {{item.album}}</view>
+<view class="container {{showMusicBar ? 'has-music-bar' : ''}}">
+  
+  <!-- 顶部欢迎区域 -->
+  <view class="welcome-section">
+    <view class="welcome-header">
+      <view class="greeting">
+        <text class="greeting-text">{{greetingText}}</text>
+        <text class="greeting-emoji">{{greetingEmoji}}</text>
+      </view>
+      <view class="avatar-wrapper" bindtap="goToProfile" wx:if="{{userInfo}}">
+        <image class="user-avatar" src="{{userInfo.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill" />
+        <view class="vip-badge-small" wx:if="{{userInfo.isVip}}">VIP</view>
+      </view>
+      <view class="avatar-wrapper" bindtap="goToLogin" wx:else>
+        <view class="avatar-placeholder">
+          <text class="icon-user"></text>
         </view>
-        <text class="play-icon">▶</text>
       </view>
     </view>
   </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-bar" bindtap="onSearchTap">
+    <text class="icon-search"></text>
+    <text class="search-placeholder">搜索歌曲、歌手、专辑</text>
+  </view>
+
+  <!-- 分类入口 - 图标化 -->
+  <view class="categories-grid">
+    <view class="category-card" wx:for="{{categories}}" wx:key="id" 
+          data-category="{{item.id}}" bindtap="onCategoryTap"
+          style="--category-index: {{index}}">
+      <view class="category-icon-wrapper {{'category-bg-' + index}}">
+        <text class="category-icon">{{item.icon}}</text>
+      </view>
+      <text class="category-name">{{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 为你推荐 -->
+  <view class="recommend-section">
+    <view class="section-header">
+      <view class="section-title-wrapper">
+        <text class="section-icon">✨</text>
+        <text class="section-title">为你推荐</text>
+      </view>
+      <view class="play-all-btn" bindtap="onPlayAllTap" data-songs="{{recommendSongs}}" wx:if="{{recommendSongs.length > 0}}">
+        <text class="icon-play-small"></text>
+        <text class="play-all-text">播放全部</text>
+      </view>
+    </view>
+    
+    <!-- 加载状态 -->
+    <view class="loading-wrapper" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">正在加载...</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{recommendSongs.length === 0 && !loading}}">
+      <text class="empty-icon">🎵</text>
+      <text class="empty-text">暂无推荐歌曲</text>
+      <text class="empty-desc">去分类中探索更多音乐吧</text>
+    </view>
+    
+    <!-- 歌曲卡片 -->
+    <scroll-view wx:else class="song-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="song-scroll-inner">
+        <view class="song-card" wx:for="{{recommendSongs}}" wx:key="id" data-song="{{item}}" bindtap="onSongTap">
+          <view class="song-card-cover-wrapper">
+            <image class="song-card-cover" src="{{item.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
+            <view class="song-card-overlay">
+              <text class="icon-play-circle"></text>
+            </view>
+            <text wx:if="{{item.isVip}}" class="vip-tag-small">VIP</text>
+          </view>
+          <view class="song-card-info">
+            <view class="song-card-title">{{item.title}}</view>
+            <view class="song-card-artist">{{item.artist}}</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 各分类推荐 -->
+  <block wx:for="{{categories}}" wx:key="id" wx:for-item="category">
+    <view class="category-section" wx:if="{{categorySongs[category.id] && categorySongs[category.id].length > 0}}">
+      <view class="section-header">
+        <view class="section-title-wrapper">
+          <text class="section-icon">{{category.icon}}</text>
+          <text class="section-title">{{category.name}}精选</text>
+        </view>
+        <text class="more-link" data-category="{{category.id}}" bindtap="onCategoryTap">
+          <text class="more-text">更多</text>
+          <text class="icon-arrow-right"></text>
+        </text>
+      </view>
+      
+      <scroll-view class="song-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="song-scroll-inner">
+          <view class="song-card" wx:for="{{categorySongs[category.id]}}" wx:key="id" wx:for-item="song" data-song="{{song}}" bindtap="onSongTap">
+            <view class="song-card-cover-wrapper">
+              <image class="song-card-cover" src="{{song.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
+              <view class="song-card-overlay">
+                <text class="icon-play-circle"></text>
+              </view>
+              <text wx:if="{{song.isVip}}" class="vip-tag-small">VIP</text>
+            </view>
+            <view class="song-card-info">
+              <view class="song-card-title">{{song.title}}</view>
+              <view class="song-card-artist">{{song.artist}}</view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </block>
 </view>
 
 <!-- 底部播放条 -->
-<music-bar />
+<music-bar show="{{showMusicBar}}" />

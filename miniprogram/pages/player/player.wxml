@@ -1,42 +1,269 @@
-<view class="player-page" wx:if="{{song}}">
-  <!-- 背景模糊 -->
-  <image class="bg-image" src="{{song.coverUrl}}" mode="aspectFill" />
+<view class="player-page {{showLyrics ? 'show-lyrics' : ''}}" wx:if="{{song}}">
+  
+  <!-- 双层背景 -->
+  <image class="bg-image" src="{{song.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
+  <image class="bg-image-saturated" src="{{song.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
   <view class="bg-mask" />
+  
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="icon-arrow-down"></text>
+    </view>
+    <view class="header-title">
+      <text class="title-text">正在播放</text>
+    </view>
+    <view class="header-right">
+      <view class="lyrics-toggle-btn {{showLyrics ? 'active' : ''}}" bindtap="toggleLyrics">
+        <text class="icon-lyrics"></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 唱片区域 -->
+  <view class="disc-section" 
+        bindtouchstart="onTouchStart" 
+        bindtouchmove="onTouchMove" 
+        bindtouchend="onTouchEnd">
+    <!-- 唱针臂 -->
+    <view class="tonearm {{isPlaying ? 'playing' : 'paused'}}">
+      <view class="tonearm-base"></view>
+      <view class="tonearm-arm"></view>
+      <view class="tonearm-head"></view>
+    </view>
+    
+    <!-- 唱片 -->
+    <view class="disc-wrapper">
+      <view class="disc-glow {{isPlaying ? 'glowing' : ''}}"></view>
+      <view class="disc-outer {{isPlaying ? 'rotating' : ''}}">
+        <image class="disc-cover" src="{{song.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
+      </view>
+      <view class="disc-inner"></view>
+      <view class="disc-center-hole"></view>
+    </view>
+  </view>
 
   <!-- 歌曲信息 -->
   <view class="song-info">
-    <image class="cover {{isPlaying ? 'rotating' : ''}}" src="{{song.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
-    <view class="title">{{song.title}}
-      <text wx:if="{{song.isVip}}" class="vip-tag">VIP</text>
+    <view class="song-title">
+      <text class="title">{{song.title}}</text>
+      <text wx:if="{{song.isVip}}" class="vip-badge">VIP</text>
     </view>
-    <view class="artist">{{song.artist}}</view>
+    <view class="song-artist">
+      <text class="artist-name">{{song.artist}}</text>
+      <text wx:if="{{song.album}}" class="album-name"> · {{song.album}}</text>
+    </view>
   </view>
 
-  <!-- 歌词 -->
-  <scroll-view class="lyrics-container" scroll-y scroll-into-view="lyric-{{currentLyricIndex}}">
-    <view wx:for="{{lyrics}}" wx:key="index" id="lyric-{{index}}" class="lyric-item {{index === currentLyricIndex ? 'active' : ''}}">
-      {{item.text}}
+  <!-- 歌词区域（可切换显示/隐藏） -->
+  <view class="lyrics-wrapper {{showLyrics ? 'expanded' : 'collapsed'}}">
+    <scroll-view 
+      class="lyrics-container" 
+      scroll-y 
+      scroll-into-view="lyric-{{currentLyricIndex}}"
+      scroll-with-animation
+      enhanced
+      show-scrollbar="{{false}}"
+    >
+      <view class="lyrics-padding"></view>
+      <block wx:if="{{lyrics.length === 0}}">
+        <view class="no-lyrics">
+          <text>暂无歌词</text>
+        </view>
+      </block>
+      <block wx:else>
+        <view wx:for="{{lyrics}}" wx:key="index" id="lyric-{{index}}" class="lyric-item {{index === currentLyricIndex ? 'active' : ''}} {{index === currentLyricIndex - 1 || index === currentLyricIndex + 1 ? 'near' : ''}}">
+          {{item.text}}
+        </view>
+      </block>
+      <view class="lyrics-padding"></view>
+    </scroll-view>
+  </view>
+
+  <!-- 波形可视化指示器 -->
+  <view class="waveform-indicator {{showLyrics ? 'hidden' : ''}}">
+    <view class="waveform-bar" wx:for="{{waveformBars}}" wx:key="index" 
+          style="height: {{item}}rpx; animation-delay: {{index * 0.05}}s">
     </view>
-  </scroll-view>
+  </view>
 
   <!-- 进度条 -->
-  <view class="progress">
-    <text class="time">{{formatTime(currentTime)}}</text>
-    <slider class="slider" min="0" max="{{duration}}" value="{{currentTime}}" block-size="12" activeColor="#FF6B9D" backgroundColor="rgba(255,255,255,0.3)" bindchange="onSliderChange" />
-    <text class="time">{{formatTime(duration)}}</text>
+  <view class="progress-container">
+    <view class="progress-times">
+      <text class="time current-time">{{formattedCurrentTime}}</text>
+      <text class="time duration-time">{{formattedDuration}}</text>
+    </view>
+    <view class="progress-bar-wrapper">
+      <slider 
+        class="progress-slider"
+        min="0" 
+        max="{{duration}}" 
+        value="{{currentTime}}"
+        block-size="16"
+        activeColor="#F472B6"
+        backgroundColor="rgba(255,255,255,0.12)"
+        block-color="#F472B6"
+        bindchanging="onSliderChanging"
+        bindchange="onSliderChange"
+      />
+    </view>
+  </view>
+
+  <!-- 手势提示 -->
+  <view class="gesture-tip {{gestureTipVisible ? 'show' : ''}}">
+    <text class="gesture-icon">{{gestureTipIcon}}</text>
+    <text class="gesture-text">{{gestureTipText}}</text>
   </view>
 
   <!-- 控制按钮 -->
   <view class="controls">
-    <text class="control-btn" bindtap="toggleMode">
-      {{playMode === 'sequence' ? '🔁' : playMode === 'random' ? '🔀' : '🔂'}}
-    </text>
-    <text class="control-btn" bindtap="playPrev">⏮</text>
-    <text class="control-btn play-btn" bindtap="togglePlay">{{isPlaying ? '⏸' : '▶'}}</text>
-    <text class="control-btn" bindtap="playNext">⏭</text>
-    <text class="control-btn {{isFavorite ? 'active' : ''}}" bindtap="toggleFavorite">{{isFavorite ? '❤️' : '🤍'}}</text>
+    <view class="control-item" bindtap="toggleMode">
+      <view class="control-icon-wrapper">
+        <text class="control-icon">{{playModeIcon}}</text>
+      </view>
+    </view>
+    
+    <view class="control-item" bindtap="playPrev">
+      <view class="control-icon-wrapper">
+        <text class="control-icon icon-prev"></text>
+      </view>
+    </view>
+    
+    <view class="control-item play-item" bindtap="togglePlay">
+      <view class="play-btn-wrapper">
+        <text class="play-icon {{isPlaying ? 'icon-pause' : 'icon-play'}}"></text>
+      </view>
+    </view>
+    
+    <view class="control-item" bindtap="playNext">
+      <view class="control-icon-wrapper">
+        <text class="control-icon icon-next"></text>
+      </view>
+    </view>
+    
+    <view class="control-item {{isFavorite ? 'favorited' : ''}}" bindtap="toggleFavorite">
+      <view class="control-icon-wrapper">
+        <text class="control-icon {{isFavorite ? 'icon-heart-filled' : 'icon-heart'}}"></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <view class="action-item" bindtap="showComments">
+      <text class="action-icon icon-comment"></text>
+      <text class="action-text">评论</text>
+    </view>
+    <view class="action-item" bindtap="togglePlayList">
+      <text class="action-icon icon-playlist"></text>
+      <text class="action-text">播放列表</text>
+      <text class="action-count" wx:if="{{playList.length > 0}}">{{playList.length}}</text>
+    </view>
+    <view class="action-item" bindtap="shareSong">
+      <text class="action-icon icon-share"></text>
+      <text class="action-text">分享</text>
+    </view>
+  </view>
+</view>
+
+<!-- 待播放歌曲列表 -->
+<view class="playlist-modal {{showPlayList ? 'show' : ''}}" catchtouchmove="true">
+  <view class="playlist-mask" bindtap="closePlayList"></view>
+  <view class="playlist-container">
+    <view class="playlist-header">
+      <view class="playlist-header-left">
+        <text class="playlist-title">播放列表</text>
+        <text class="playlist-count">{{playList.length}} 首</text>
+      </view>
+      <view class="playlist-actions">
+        <text class="clear-btn" bindtap="onClearPlaylist" wx:if="{{playList.length > 0}}">清空</text>
+        <view class="playlist-close" bindtap="closePlayList">
+          <text class="icon-close"></text>
+        </view>
+      </view>
+    </view>
+    <scroll-view class="playlist-content" scroll-y enhanced show-scrollbar="{{false}}">
+      <view class="empty-tip" wx:if="{{playList.length === 0}}">
+        <text class="empty-icon">🎵</text>
+        <text>播放列表为空</text>
+      </view>
+      <view 
+        class="playlist-item {{item.id === song.id ? 'active' : ''}}" 
+        wx:for="{{playList}}" 
+        wx:key="id"
+        bindtap="onPlayListItemTap"
+        data-song="{{item}}"
+      >
+        <view class="item-main">
+          <image class="item-cover" src="{{item.coverUrl || '/static/images/default-cover.png'}}" mode="aspectFill" />
+          <view class="item-info">
+            <view class="item-title">
+              <text class="title-text">{{item.title}}</text>
+              <text wx:if="{{item.isVip}}" class="vip-tag">VIP</text>
+            </view>
+            <text class="item-artist">{{item.artist}}</text>
+          </view>
+        </view>
+        <view class="item-right">
+          <view class="item-status" wx:if="{{item.id === song.id}}">
+            <view class="playing-bars" wx:if="{{isPlaying}}">
+              <view class="bar"></view>
+              <view class="bar"></view>
+              <view class="bar"></view>
+            </view>
+            <text class="icon-pause-small" wx:else></text>
+          </view>
+          <view class="item-delete" catchtap="onRemoveSong" data-id="{{item.id}}">
+            <text class="icon-remove"></text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 </view>
 
 <!-- VIP弹窗 -->
-<vip-modal wx:if="{{showVipModal}}" bind:close="{{showVipModal = false}}" bind:confirm="goToVip" />
+<vip-modal wx:if="{{showVipModal}}" bind:close="closeVipModal" bind:confirm="goToVip" />
+
+<!-- 歌曲评论弹窗 -->
+<view class="comment-modal {{showCommentModal ? 'show' : ''}}" catchtouchmove="true">
+  <view class="comment-mask" bindtap="hideComments"></view>
+  <view class="comment-container">
+    <view class="comment-header">
+      <text class="comment-title">歌曲评论</text>
+      <view class="comment-close" bindtap="hideComments">
+        <text class="icon-close"></text>
+      </view>
+    </view>
+    <scroll-view class="comment-content" scroll-y scroll-top="{{commentScrollTop}}" enhanced show-scrollbar="{{false}}" bindscrolltolower="onCommentScrollToLower">
+      <view class="empty-tip" wx:if="{{comments.length === 0 && !commentLoading}}">
+        <text class="empty-icon">💬</text>
+        <text>暂无评论，快来抢沙发吧</text>
+      </view>
+      <view class="comment-loading" wx:if="{{commentLoading}}">
+        <text>加载中...</text>
+      </view>
+      <view class="song-comment-item" wx:for="{{comments}}" wx:key="id">
+        <image class="comment-avatar" src="{{item.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill" />
+        <view class="comment-main">
+          <view class="comment-user">
+            <text class="comment-username">{{item.username}}</text>
+            <text class="comment-time">{{item.createTime}}</text>
+          </view>
+          <view class="comment-text">{{item.content}}</view>
+          <view class="comment-actions">
+            <view class="comment-like {{item.isLiked ? 'liked' : ''}}" bindtap="likeSongComment" data-id="{{item.id}}">
+              <text class="like-icon">{{item.isLiked ? '❤️' : '🤍'}}</text>
+              <text class="like-count">{{item.likes}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{!hasMoreComments && comments.length > 0}}" class="no-more-comments">没有更多评论了</view>
+    </scroll-view>
+    <view class="comment-input-area">
+      <input class="comment-input" placeholder="说点什么..." value="{{commentText}}" bindinput="onCommentInput" confirm-type="send" bindconfirm="sendComment" />
+      <button class="comment-send-btn" bindtap="sendComment">发送</button>
+    </view>
+  </view>
+</view>

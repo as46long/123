@@ -10,6 +10,7 @@
               <el-option label="已支付" :value="1" />
             </el-select>
             <el-select v-model="packageType" placeholder="套餐类型" clearable style="width: 120px; margin-right: 10px">
+              <el-option label="周卡" value="WEEK" />
               <el-option label="月卡" value="MONTH" />
               <el-option label="季卡" value="QUARTER" />
               <el-option label="年卡" value="YEAR" />
@@ -23,7 +24,7 @@
         <el-table-column prop="username" label="用户" />
         <el-table-column prop="packageType" label="套餐">
           <template #default="{ row }">
-            {{ row.packageType === 'MONTH' ? '月卡' : row.packageType === 'QUARTER' ? '季卡' : '年卡' }}
+            {{ row.packageType === 'WEEK' ? '周卡' : row.packageType === 'MONTH' ? '月卡' : row.packageType === 'QUARTER' ? '季卡' : '年卡' }}
           </template>
         </el-table-column>
         <el-table-column prop="amount" label="金额">

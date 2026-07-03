@@ -1,0 +1,10 @@
+<view class="splash-page" wx:if="{{ready}}">
+  <image 
+    wx:if="{{imageUrl}}"
+    class="splash-image" 
+    src="{{imageUrl}}" 
+    mode="aspectFill" 
+    bindtap="onImageTap"
+  />
+  <view wx:if="{{imageUrl}}" class="click-hint">点击进入</view>
+</view>

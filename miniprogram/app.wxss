@@ -1,64 +1,214 @@
-/* 全局样式 */
+/* ==========================================
+   乐语匣子 - 全局样式系统 (玻璃拟态版)
+   ========================================== */
+
+/* 色彩变量注释:
+   --bg-primary: #0D0D1A (主背景)
+   --text-primary: rgba(255,255,255,0.95)
+   --text-secondary: rgba(255,255,255,0.6)
+   --text-tertiary: rgba(255,255,255,0.35)
+   --accent-primary: #F472B6
+   --accent-secondary: #8B5CF6
+   --vip-gold: #FBBF24
+*/
+
 page {
-  background-color: #1a1a2e;
-  color: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background-color: #0D0D1A;
+  color: rgba(255, 255, 255, 0.95);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 }
 
+/* ==========================================
+   间距系统 (基础单位: 16rpx)
+   ========================================== */
 .container {
-  padding: 20rpx;
+  padding: 24rpx;
 }
 
+.container--tight {
+  padding: 16rpx;
+}
+
+.container--loose {
+  padding: 32rpx;
+}
+
+/* ==========================================
+   玻璃拟态卡片系统
+   ========================================== */
+
+/* 基础玻璃卡片 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-radius: 32rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 
+    0 8rpx 32rpx rgba(0, 0, 0, 0.3),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.05);
+}
+
+/* 强玻璃卡片（用于重点内容） */
+.glass-card--strong {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1rpx solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 12rpx 40rpx rgba(0, 0, 0, 0.4),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.08);
+}
+
+/* 兼容旧版 .card 类 */
 .card {
-  background: linear-gradient(145deg, #252542, #1e1e36);
-  border-radius: 16rpx;
-  padding: 20rpx;
-  margin-bottom: 20rpx;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-radius: 32rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 
+    0 8rpx 32rpx rgba(0, 0, 0, 0.3),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.05);
 }
 
+/* ==========================================
+   按钮系统
+   ========================================== */
+
+/* 主按钮 - 渐变 + 发光 */
 .primary-btn {
-  background: linear-gradient(135deg, #6B5B95, #FF6B9D);
+  background: linear-gradient(135deg, #F472B6, #8B5CF6);
   color: #fff;
-  border-radius: 40rpx;
-  padding: 20rpx 40rpx;
+  border-radius: 48rpx;
+  padding: 24rpx 48rpx;
   border: none;
+  font-size: 28rpx;
+  font-weight: 500;
+  box-shadow: 0 8rpx 24rpx rgba(244, 114, 182, 0.3);
+  transition: all 0.3s ease;
 }
 
-.vip-tag {
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: #000;
-  padding: 4rpx 12rpx;
-  border-radius: 8rpx;
-  font-size: 20rpx;
+.primary-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 4rpx 12rpx rgba(244, 114, 182, 0.2);
 }
+
+/* 次要按钮 - 玻璃态 */
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: 48rpx;
+  padding: 24rpx 48rpx;
+  font-size: 28rpx;
+  transition: all 0.2s ease;
+}
+
+.secondary-btn:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================
+   标签系统
+   ========================================== */
+
+/* VIP 标签 - 琥珀金渐变 */
+.vip-tag {
+  background: linear-gradient(135deg, #FBBF24, #F59E0B);
+  color: #000;
+  padding: 6rpx 16rpx;
+  border-radius: 24rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(251, 191, 36, 0.25);
+}
+
+.vip-tag--small {
+  padding: 4rpx 10rpx;
+  font-size: 18rpx;
+  border-radius: 20rpx;
+}
+
+/* ==========================================
+   列表项系统
+   ========================================== */
 
 .song-item {
   display: flex;
   align-items: center;
-  padding: 20rpx;
-  background: rgba(255,255,255,0.05);
-  border-radius: 16rpx;
+  padding: 24rpx 32rpx;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.04);
+  border-radius: 24rpx;
   margin-bottom: 16rpx;
+  transition: background 0.2s ease;
+}
+
+.song-item:active {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .song-cover {
   width: 100rpx;
   height: 100rpx;
-  border-radius: 12rpx;
-  margin-right: 20rpx;
+  border-radius: 20rpx;
+  margin-right: 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
 }
 
 .song-info {
   flex: 1;
+  min-width: 0;
 }
 
 .song-title {
   font-size: 28rpx;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.95);
   margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .song-artist {
   font-size: 24rpx;
-  color: #999;
+  color: rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   文字层级
+   ========================================== */
+.text-primary {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.text-secondary {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.text-tertiary {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ==========================================
+   发光效果
+   ========================================== */
+.glow-accent {
+  box-shadow: 
+    0 0 20rpx rgba(244, 114, 182, 0.4),
+    0 0 40rpx rgba(139, 92, 246, 0.2);
+}
+
+.glow-vip {
+  box-shadow: 0 0 16rpx rgba(251, 191, 36, 0.3);
 }

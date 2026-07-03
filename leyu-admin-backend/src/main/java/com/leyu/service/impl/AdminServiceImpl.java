@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * 管理员服务实现类
+ * 实现管理员登录验证、信息管理等功能
+ */
 @Service
 public class AdminServiceImpl implements AdminService {
 

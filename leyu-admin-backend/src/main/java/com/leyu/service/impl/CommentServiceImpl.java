@@ -16,6 +16,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 留言服务实现类
+ * 实现留言的发布、审核、点赞、查询等功能
+ */
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -84,6 +88,17 @@ public class CommentServiceImpl implements CommentService {
         LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Comment::getStatus, 0);
         return commentMapper.selectCount(wrapper);
+    }
+
+    @Override
+    public Page<CommentVO> getMyComments(Long userId, int pageNum, int pageSize) {
+        Page<Comment> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Comment::getUserId, userId).orderByDesc(Comment::getCreateTime);
+        Page<Comment> commentPage = commentMapper.selectPage(page, wrapper);
+        Page<CommentVO> voPage = new Page<>(pageNum, pageSize, commentPage.getTotal());
+        voPage.setRecords(commentPage.getRecords().stream().map(this::convertToVO).collect(Collectors.toList()));
+        return voPage;
     }
 
     private CommentVO convertToVO(Comment comment) {

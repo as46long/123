@@ -104,7 +104,9 @@ CREATE TABLE t_user_behavior (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户行为表';
 
 -- 插入默认管理员（密码：admin123）
-INSERT INTO t_admin (username, password) VALUES ('admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5EHsM');
+ -- 插入默认管理员（密码：admin123）
+ -- BCrypt哈希值通过 BCryptPasswordEncoder.encode("admin123") 生成
+ INSERT INTO t_admin (username, password) VALUES ('admin', '$2a$10$UMJqo3WtbiBxgATqrn58Se5.tZdR3d6VV3MtcDgM7xssKPcdcXW8G');
 
 -- 插入示例歌曲数据
 INSERT INTO t_song (title, artist, album, category, is_vip, play_count, status) VALUES

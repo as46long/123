@@ -5,8 +5,11 @@
     <view class="user-info">
       <view class="nickname">{{userInfo.nickname || userInfo.username}}</view>
       <view class="vip-status">
-        <text wx:if="{{userInfo.isVip}}">👑 VIP会员 | 到期：{{userInfo.vipExpireTime}}</text>
-        <text wx:else>开通VIP，畅享海量音乐</text>
+        <block wx:if="{{userInfo.isVip}}">
+          <text class="vip-badge">👑 VIP会员</text>
+          <text class="expire-time">到期时间：{{expireTimeText}}</text>
+        </block>
+        <text wx:else class="normal-text">开通VIP，畅享海量音乐</text>
       </view>
     </view>
   </view>

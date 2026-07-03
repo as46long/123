@@ -1,7 +1,24 @@
 import request from '@/utils/request'
 
-export const getCommentList = (params) => request.get('/comment/list', { params })
+export function getCommentList(params) {
+  return request({
+    url: '/api/admin/comment/list',
+    method: 'get',
+    params
+  })
+}
 
-export const auditComment = (id, status) => request.put(`/comment/audit/${id}?status=${status}`)
+export function auditComment(id, status) {
+  return request({
+    url: `/api/admin/comment/audit/${id}`,
+    method: 'put',
+    params: { status }
+  })
+}
 
-export const deleteComment = (id) => request.delete(`/comment/delete/${id}`)
+export function deleteComment(id) {
+  return request({
+    url: `/api/admin/comment/delete/${id}`,
+    method: 'delete'
+  })
+}

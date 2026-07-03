@@ -2,23 +2,51 @@
   <view class="login-box">
     <view class="logo">🎵</view>
     <view class="title">乐语匣子</view>
-    
+
     <view class="form">
       <input class="input" placeholder="用户名" value="{{username}}" bindinput="onUsernameInput" />
       <input class="input" placeholder="密码" password value="{{password}}" bindinput="onPasswordInput" />
       <input wx:if="{{isRegister}}" class="input" placeholder="昵称（可选）" value="{{nickname}}" bindinput="onNicknameInput" />
-      
+
       <button class="primary-btn submit-btn" bindtap="handleSubmit">
         {{isRegister ? '注册' : '登录'}}
       </button>
-      
-      <button class="wx-btn" open-type="getPhoneNumber" bindgetphonenumber="handleWxLogin">
-        <text class="wx-icon">💚</text> 微信一键登录
+
+      <view wx:if="{{!isRegister}}" class="divider">
+        <view class="divider-line"></view>
+        <view class="divider-text">或</view>
+        <view class="divider-line"></view>
+      </view>
+
+      <button wx:if="{{!isRegister}}" class="wx-login-btn" bindtap="handleWxLogin">
+        <text class="wx-icon">💚</text>
+        <text class="wx-text">微信一键登录</text>
       </button>
-      
+
       <view class="switch-mode" bindtap="toggleMode">
         {{isRegister ? '已有账号？去登录' : '没有账号？去注册'}}
       </view>
+    </view>
+  </view>
+
+  <!-- 微信用户信息填写弹窗 -->
+  <view class="modal-mask" wx:if="{{showWxInfoModal}}" bindtap="hideWxInfoModal">
+    <view class="modal-content" catchtap>
+      <view class="modal-title">完善个人信息</view>
+      <view class="modal-desc">设置头像和昵称后将不再弹出</view>
+      
+      <view class="avatar-section">
+        <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image class="avatar-img" src="{{avatarUrl || '/static/images/default-avatar.png'}}" mode="aspectFill" />
+          <view class="avatar-text">选择头像</view>
+        </button>
+      </view>
+
+      <view class="nickname-section">
+        <input class="nickname-input" type="nickname" placeholder="请输入昵称" value="{{wxNickname}}" bindinput="onWxNicknameInput" bindblur="onWxNicknameInput" />
+      </view>
+
+      <button class="confirm-btn" bindtap="confirmWxLogin">确认登录</button>
     </view>
   </view>
 </view>

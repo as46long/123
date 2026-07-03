@@ -1,37 +1,105 @@
-<view class="profile-page">
-  <view class="user-card" wx:if="{{userInfo}}">
-    <image class="avatar" src="{{userInfo.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill" />
-    <view class="user-info">
-      <view class="nickname">{{userInfo.nickname || userInfo.username}}</view>
-      <view class="vip-status">
-        <text wx:if="{{isVip}}" class="vip-tag">👑 VIP会员</text>
-        <text wx:else class="normal-tag">普通用户</text>
+<view class="profile-page {{showMusicBar ? 'has-music-bar' : ''}}">
+  
+  <!-- 用户卡片 -->
+  <view class="user-card {{isVip ? 'is-vip' : ''}}" wx:if="{{userInfo}}">
+    <view class="user-card-bg"></view>
+    <view class="user-card-content">
+      <image class="avatar" src="{{userInfo.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill" />
+      <view class="user-info">
+        <view class="nickname-row">
+          <text class="nickname">{{userInfo.nickname || userInfo.username}}</text>
+          <view class="vip-badge" wx:if="{{isVip}}">
+            <text class="vip-icon">👑</text>
+            <text class="vip-text">VIP</text>
+          </view>
+        </view>
+        <view class="user-desc" wx:if="{{isVip}}">
+          <text class="expire-text">会员到期：{{vipExpireTime || '未知'}}</text>
+        </view>
+        <view class="user-desc" wx:else>
+          <text class="upgrade-text">开通VIP，畅享无损音质</text>
+        </view>
+      </view>
+      <view class="edit-btn" bindtap="onEditProfile">
+        <text class="icon-edit"></text>
       </view>
     </view>
   </view>
 
-  <view wx:else class="login-prompt">
+  <!-- 未登录提示 -->
+  <view class="login-prompt-card" wx:else>
+    <view class="login-prompt-icon">🎵</view>
     <view class="prompt-text">登录后享受更多功能</view>
-    <button class="primary-btn" bindtap="onLoginTap">立即登录</button>
+    <button class="login-btn" bindtap="onLoginTap">立即登录</button>
   </view>
 
-  <view class="menu-list">
-    <view class="menu-item" bindtap="onPlaylistTap">
-      <text class="menu-icon">❤️</text>
-      <text class="menu-text">我的收藏</text>
-      <text class="arrow">›</text>
+  <!-- 统计信息 -->
+  <view class="stats-card" wx:if="{{userInfo}}">
+    <view class="stat-item" bindtap="onPlaylistTap">
+      <text class="stat-value">{{stats.favoriteCount || 0}}</text>
+      <text class="stat-label">收藏</text>
     </view>
-    <view class="menu-item" bindtap="onVipTap">
-      <text class="menu-icon">👑</text>
-      <text class="menu-text">会员中心</text>
-      <text class="arrow">›</text>
+    <view class="stat-divider"></view>
+    <view class="stat-item" bindtap="onMyCommentsTap">
+      <text class="stat-value">{{stats.commentCount || 0}}</text>
+      <text class="stat-label">评论</text>
     </view>
-    <view class="menu-item" bindtap="onOrderTap">
-      <text class="menu-icon">📋</text>
-      <text class="menu-text">订单记录</text>
-      <text class="arrow">›</text>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value">{{stats.playCount || 0}}</text>
+      <text class="stat-label">听过</text>
     </view>
   </view>
 
+  <!-- 菜单列表 -->
+  <view class="menu-section" wx:if="{{userInfo}}">
+    <view class="section-label">我的服务</view>
+    <view class="menu-card">
+      <view class="menu-item" bindtap="onPlaylistTap">
+        <view class="menu-left">
+          <view class="menu-icon-wrapper menu-icon-pink">
+            <text class="menu-icon">❤️</text>
+          </view>
+          <text class="menu-text">我的收藏</text>
+        </view>
+        <text class="icon-arrow"></text>
+      </view>
+      <view class="menu-item" bindtap="onMyCommentsTap">
+        <view class="menu-left">
+          <view class="menu-icon-wrapper menu-icon-blue">
+            <text class="menu-icon">💬</text>
+          </view>
+          <text class="menu-text">我的评论</text>
+        </view>
+        <text class="icon-arrow"></text>
+      </view>
+      <view class="menu-item" bindtap="onVipTap">
+        <view class="menu-left">
+          <view class="menu-icon-wrapper menu-icon-gold">
+            <text class="menu-icon">👑</text>
+          </view>
+          <text class="menu-text">会员中心</text>
+        </view>
+        <view class="menu-right">
+          <text class="menu-extra" wx:if="{{isVip}}">已开通</text>
+          <text class="icon-arrow"></text>
+        </view>
+      </view>
+      <view class="menu-item" bindtap="onOrderTap">
+        <view class="menu-left">
+          <view class="menu-icon-wrapper menu-icon-green">
+            <text class="menu-icon">📋</text>
+          </view>
+          <text class="menu-text">订单记录</text>
+        </view>
+        <text class="icon-arrow"></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
   <button wx:if="{{userInfo}}" class="logout-btn" bindtap="onLogout">退出登录</button>
 </view>
+
+<!-- 底部播放条 -->
+<music-bar show="{{showMusicBar}}" />

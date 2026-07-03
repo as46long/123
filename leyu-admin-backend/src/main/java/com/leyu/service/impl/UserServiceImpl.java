@@ -9,9 +9,11 @@ import com.leyu.mapper.UserMapper;
 import com.leyu.service.UserService;
 import com.leyu.utils.JwtUtil;
 import com.leyu.utils.PasswordEncoder;
+import com.leyu.utils.WechatUtil;
 import com.leyu.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -19,6 +21,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 用户服务实现类
+ * 实现用户登录、注册、微信登录、信息管理等功能
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -31,6 +37,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private WechatUtil wechatUtil;
+
+    @Value("${wechat.appid}")
+    private String wechatAppid;
+
+    @Value("${wechat.secret}")
+    private String wechatSecret;
+
+    /**
+     * 用户名密码登录
+     * 验证用户名存在性、密码正确性、账号状态
+     */
     @Override
     public UserVO login(LoginDTO dto) {
         User user = getByUsername(dto.getUsername());
@@ -48,23 +67,63 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO wxLogin(String code) {
-        // 实际项目中应调用微信API获取openid
-        // 这里简化处理，假设code就是openid
-        String openid = code;
-        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getWxOpenid, openid));
-        if (user == null) {
-            user = new User();
-            user.setWxOpenid(openid);
-            user.setUsername("wx_" + System.currentTimeMillis());
-            user.setPassword(passwordEncoder.encode("123456"));
-            user.setNickname("微信用户");
-            user.setIsVip(0);
-            user.setStatus(1);
-            userMapper.insert(user);
-        }
-        return convertToVO(user);
+        return wxLoginWithOptionalInfo(code, null, null);
     }
 
+    @Override
+    public UserVO wxLoginWithInfo(String code, String nickname, String avatar) {
+        return wxLoginWithOptionalInfo(code, nickname, avatar);
+    }
+
+    /**
+     * 微信登录
+     * 通过微信code获取openid，新用户自动创建账号
+     */
+    private UserVO wxLoginWithOptionalInfo(String code, String nickname, String avatar) {
+        try {
+            // 调用微信API获取openid
+            WechatUtil.WechatLoginResult result = wechatUtil.code2Session(wechatAppid, wechatSecret, code);
+            if (!result.isSuccess()) {
+                throw new RuntimeException("微信登录失败: " + result.getErrmsg());
+            }
+            String openid = result.getOpenid();
+
+            User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getWxOpenid, openid));
+            if (user == null) {
+                // 新用户，创建账号
+                user = new User();
+                user.setWxOpenid(openid);
+                user.setUsername("wx_" + System.currentTimeMillis());
+                user.setPassword(passwordEncoder.encode("123456"));
+                user.setNickname(StringUtils.hasText(nickname) ? nickname : "微信用户");
+                user.setAvatar(avatar);
+                user.setIsVip(0);
+                user.setStatus(1);
+                userMapper.insert(user);
+            } else {
+                // 老用户，可选更新昵称和头像
+                if (StringUtils.hasText(nickname)) {
+                    user.setNickname(nickname);
+                }
+                if (StringUtils.hasText(avatar)) {
+                    user.setAvatar(avatar);
+                }
+                userMapper.updateById(user);
+
+                if (user.getStatus() == 0) {
+                    throw new RuntimeException("账号已被禁用");
+                }
+            }
+            return convertToVO(user);
+        } catch (Exception e) {
+            throw new RuntimeException("微信登录失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 用户注册
+     * 检查用户名唯一性，加密密码，创建用户
+     */
     @Override
     public UserVO register(RegisterDTO dto) {
         if (getByUsername(dto.getUsername()) != null) {
@@ -87,13 +146,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Long id) {
+    public User getEntityById(Long id) {
         return userMapper.selectById(id);
     }
 
     @Override
-    public UserVO getVOById(Long id) {
-        User user = getById(id);
+    public UserVO getById(Long id) {
+        User user = userMapper.selectById(id);
         return user != null ? convertToVO(user) : null;
     }
 
@@ -112,8 +171,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(User user) {
-        userMapper.updateById(user);
+    public void update(Long id, UserVO vo) {
+        User user = userMapper.selectById(id);
+        if (user != null) {
+            if (StringUtils.hasText(vo.getNickname())) {
+                user.setNickname(vo.getNickname());
+            }
+            if (StringUtils.hasText(vo.getAvatar())) {
+                user.setAvatar(vo.getAvatar());
+            }
+            if (StringUtils.hasText(vo.getPhone())) {
+                user.setPhone(vo.getPhone());
+            }
+            if (StringUtils.hasText(vo.getEmail())) {
+                user.setEmail(vo.getEmail());
+            }
+            userMapper.updateById(user);
+        }
     }
 
     @Override

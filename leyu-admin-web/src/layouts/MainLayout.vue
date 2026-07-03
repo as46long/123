@@ -7,6 +7,10 @@
           <el-icon><Odometer /></el-icon>
           <span>仪表盘</span>
         </el-menu-item>
+        <el-menu-item index="/home">
+          <el-icon><HomeFilled /></el-icon>
+          <span>首页管理</span>
+        </el-menu-item>
         <el-menu-item index="/user">
           <el-icon><User /></el-icon>
           <span>用户管理</span>
@@ -19,9 +23,13 @@
           <el-icon><List /></el-icon>
           <span>订单管理</span>
         </el-menu-item>
-        <el-menu-item index="/comment">
+        <el-menu-item index="/leyuComment">
           <el-icon><ChatDotSquare /></el-icon>
-          <span>留言管理</span>
+          <span>乐语留言管理</span>
+        </el-menu-item>
+        <el-menu-item index="/songComment">
+          <el-icon><ChatDotSquare /></el-icon>
+          <span>歌曲留言管理</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -41,6 +49,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { Odometer, HomeFilled, User, Headset, List, ChatDotSquare } from '@element-plus/icons-vue'
 
 const router = useRouter()
 

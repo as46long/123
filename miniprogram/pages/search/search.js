@@ -1,4 +1,5 @@
 const api = require('../../utils/api')
+const app = getApp()
 
 Page({
   data: {
@@ -6,16 +7,17 @@ Page({
     history: [],
     hotKeywords: ['周杰伦', '陈奕迅', 'Beyond', '流行', '摇滚'],
     results: [],
-    searching: false
+    searching: false,
+    fromCategory: false
   },
 
   onLoad(options) {
+    this.loadHistory()
     const category = options.category
     if (category) {
-      this.setData({ keyword: category })
-      this.search()
+      this.setData({ keyword: category, fromCategory: true })
+      this.searchByCategory(category)
     }
-    this.loadHistory()
   },
 
   loadHistory() {
@@ -28,24 +30,37 @@ Page({
   },
 
   onClear() {
-    this.setData({ keyword: '', results: [] })
+    this.setData({ keyword: '', results: [], fromCategory: false })
   },
 
-  async search() {
-    if (!this.data.keyword.trim()) return
-    
-    this.setData({ searching: true })
-    this.saveHistory(this.data.keyword)
-    
-    try {
-      const res = await api.searchSong(this.data.keyword)
-      this.setData({ results: res.data || [] })
-    } catch (e) {
-      console.error(e)
-    } finally {
-      this.setData({ searching: false })
-    }
-  },
+ async search() {
+   if (!this.data.keyword.trim()) return
+   
+   this.setData({ searching: true, fromCategory: false })
+   this.saveHistory(this.data.keyword)
+   
+   try {
+     const res = await api.searchSong(this.data.keyword)
+     this.setData({ results: res.data || [] })
+   } catch (e) {
+     console.error(e)
+   } finally {
+     this.setData({ searching: false })
+   }
+ },
+
+ async searchByCategory(category) {
+   this.setData({ searching: true })
+   
+   try {
+     const res = await api.getSongsByCategory(category)
+     this.setData({ results: res.data || [] })
+   } catch (e) {
+     console.error(e)
+   } finally {
+     this.setData({ searching: false })
+   }
+ },
 
   saveHistory(keyword) {
     let history = this.data.history.filter(h => h !== keyword)
@@ -69,5 +84,13 @@ Page({
   onSongTap(e) {
     const song = e.currentTarget.dataset.song
     wx.navigateTo({ url: `/pages/player/player?id=${song.id}` })
+  },
+
+  onPlayAll() {
+    if (this.data.results.length > 0) {
+      const songs = this.data.results
+      app.globalData.playAllList = songs
+      wx.navigateTo({ url: `/pages/player/player?id=${songs[0].id}&playAll=true` })
+    }
   }
 })

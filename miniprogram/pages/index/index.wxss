@@ -1,66 +1,443 @@
+/* ==========================================
+   首页 - 玻璃拟态升级版
+   ========================================== */
+
 .container {
-  padding: 20rpx;
-  padding-bottom: 120rpx;
+  padding: 0 24rpx;
+  padding-top: 24rpx;
+  padding-bottom: 48rpx;
+  min-height: 100vh;
 }
 
-.search-bar {
-  background: rgba(255,255,255,0.1);
-  border-radius: 40rpx;
-  padding: 20rpx 30rpx;
+.container.has-music-bar {
+  padding-bottom: 180rpx;
+}
+
+/* ==========================================
+   顶部欢迎区域
+   ========================================== */
+.welcome-section {
+  margin-bottom: 24rpx;
+}
+
+.welcome-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.greeting {
   display: flex;
   align-items: center;
-  margin-bottom: 30rpx;
+  gap: 8rpx;
 }
 
-.search-icon {
-  margin-right: 20rpx;
+.greeting-text {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 1rpx;
+}
+
+.greeting-emoji {
+  font-size: 40rpx;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 88rpx;
+  height: 88rpx;
+}
+
+.user-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2rpx solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-user::before {
+  content: '👤';
+  font-size: 40rpx;
+  opacity: 0.5;
+}
+
+.vip-badge-small {
+  position: absolute;
+  bottom: -4rpx;
+  right: -4rpx;
+  background: linear-gradient(135deg, #FBBF24, #F59E0B);
+  color: #000;
+  font-size: 16rpx;
+  font-weight: 600;
+  padding: 2rpx 8rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 6rpx rgba(251, 191, 36, 0.3);
+}
+
+/* ==========================================
+   搜索栏
+   ========================================== */
+.search-bar {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-radius: 48rpx;
+  padding: 24rpx 32rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+  transition: all 0.3s ease;
+}
+
+.search-bar:active {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(244, 114, 182, 0.3);
+}
+
+.icon-search::before {
+  content: '🔍';
+  font-size: 32rpx;
+  margin-right: 16rpx;
+  opacity: 0.5;
 }
 
 .search-placeholder {
-  color: #999;
+  color: rgba(255, 255, 255, 0.35);
   font-size: 28rpx;
 }
 
-.categories {
-  display: flex;
-  flex-wrap: wrap;
+/* ==========================================
+   分类入口 - 图标网格
+   ========================================== */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   gap: 20rpx;
-  margin-bottom: 30rpx;
+  margin-bottom: 40rpx;
 }
 
-.category-item {
-  background: linear-gradient(135deg, #6B5B95, #FF6B9D);
-  padding: 16rpx 32rpx;
-  border-radius: 30rpx;
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  padding: 16rpx 0;
+  transition: all 0.3s ease;
+}
+
+.category-card:active {
+  transform: scale(0.92);
+}
+
+.category-icon-wrapper {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.3);
+}
+
+.category-icon-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+}
+
+/* 不同分类的不同背景色 */
+.category-bg-0 { background: linear-gradient(135deg, #F472B6, #EC4899); }
+.category-bg-1 { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+.category-bg-2 { background: linear-gradient(135deg, #10B981, #059669); }
+.category-bg-3 { background: linear-gradient(135deg, #F59E0B, #D97706); }
+.category-bg-4 { background: linear-gradient(135deg, #3B82F6, #2563EB); }
+
+.category-icon {
+  font-size: 48rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.category-name {
   font-size: 24rpx;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
 }
 
+/* ==========================================
+   分区标题
+   ========================================== */
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.section-icon {
+  font-size: 32rpx;
 }
 
 .section-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #fff;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 1rpx;
 }
 
-.play-all {
+/* 播放全部按钮 */
+.play-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  background: rgba(244, 114, 182, 0.12);
+  border: 1rpx solid rgba(244, 114, 182, 0.2);
+  padding: 12rpx 24rpx;
+  border-radius: 32rpx;
+  transition: all 0.2s ease;
+}
+
+.play-all-btn:active {
+  background: rgba(244, 114, 182, 0.2);
+}
+
+.icon-play-small::before {
+  content: '▶';
+  font-size: 20rpx;
+  color: #F472B6;
+}
+
+.play-all-text {
   font-size: 24rpx;
-  color: #FF6B9D;
+  color: #F472B6;
+  font-weight: 500;
 }
 
-.loading {
-  text-align: center;
-  padding: 40rpx;
-  color: #999;
+/* 更多链接 */
+.more-link {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 32rpx;
+  transition: all 0.2s ease;
 }
 
-.play-icon {
-  color: #FF6B9D;
-  font-size: 32rpx;
+.more-link:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.more-text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.icon-arrow-right::before {
+  content: '›';
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ==========================================
+   加载和空状态
+   ========================================== */
+.loading-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 0;
+  gap: 16rpx;
+}
+
+.loading-spinner {
+  width: 48rpx;
+  height: 48rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.1);
+  border-top-color: #F472B6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0;
+  gap: 12rpx;
+}
+
+.empty-state .empty-icon {
+  font-size: 80rpx;
+  opacity: 0.5;
+}
+
+.empty-state .empty-text {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.empty-state .empty-desc {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ==========================================
+   横向滚动歌曲列表
+   ========================================== */
+.song-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.song-scroll-inner {
+  display: inline-flex;
+  padding: 8rpx 0;
+}
+
+/* ==========================================
+   歌曲卡片 - 玻璃拟态
+   ========================================== */
+.song-card {
+  display: inline-flex;
+  flex-direction: column;
+  width: 220rpx;
+  margin-right: 24rpx;
+  position: relative;
+}
+
+.song-card-cover-wrapper {
+  position: relative;
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 28rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.song-card:active .song-card-cover-wrapper {
+  transform: scale(0.96);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+}
+
+.song-card-cover {
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+/* 悬浮播放图标 */
+.song-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.song-card:active .song-card-overlay {
+  opacity: 1;
+}
+
+.icon-play-circle::before {
+  content: '▶';
+  font-size: 56rpx;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.4);
+}
+
+/* VIP 标签 */
+.vip-tag-small {
+  position: absolute;
+  top: 12rpx;
+  right: 12rpx;
+  background: linear-gradient(135deg, #FBBF24, #F59E0B);
+  color: #000;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  font-size: 18rpx;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(251, 191, 36, 0.3);
+  z-index: 2;
+}
+
+/* 歌曲信息 */
+.song-card-info {
+  padding: 16rpx 4rpx;
+}
+
+.song-card-title {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 8rpx;
+  font-weight: 500;
+}
+
+.song-card-artist {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.45);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   分类推荐区域
+   ========================================== */
+.recommend-section {
+  margin-bottom: 40rpx;
+}
+
+.category-section {
+  margin-bottom: 40rpx;
+}
+
+/* 用户卡片 VIP 样式 */
+.user-card.is-vip .user-card-bg {
+  background: linear-gradient(135deg, #2D1B00 0%, #4A2E00 50%, #2D1B00 100%);
 }

@@ -1,0 +1,189 @@
+.my-comments-page {
+  padding: 0;
+  background: #0D0D1A;
+  min-height: 100vh;
+}
+
+/* 标签栏 - 玻璃拟态 */
+.tab-bar {
+  display: flex;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.06);
+  padding: 16rpx 24rpx;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 28rpx;
+  border-radius: 24rpx;
+  transition: all 0.3s ease;
+}
+
+.tab-item.active {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(244, 114, 182, 0.12);
+  font-weight: 500;
+}
+
+.loading {
+  text-align: center;
+  padding: 100rpx 0;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 28rpx;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 0;
+}
+
+.empty-icon {
+  font-size: 100rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 28rpx;
+}
+
+.comment-list {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+/* 评论卡片 - 玻璃拟态 */
+.comment-item,
+.song-comment-item {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1rpx solid rgba(255, 255, 255, 0.06);
+  border-radius: 32rpx;
+  padding: 32rpx;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.2);
+}
+
+.violation {
+  opacity: 0.6;
+}
+
+.violation-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(239, 68, 68, 0.9);
+  padding: 16rpx 40rpx;
+  border-radius: 24rpx;
+  z-index: 10;
+}
+
+.violation-text {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.comment-main,
+.song-comment-main {
+  position: relative;
+  z-index: 2;
+}
+
+/* 歌曲信息 - 玻璃拟态 */
+.song-info {
+  background: rgba(244, 114, 182, 0.08);
+  border: 1rpx solid rgba(244, 114, 182, 0.15);
+  padding: 20rpx;
+  border-radius: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.song-title {
+  display: block;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 28rpx;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.song-artist {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 24rpx;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.time {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 24rpx;
+}
+
+/* 状态标签 */
+.status {
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.status.pending {
+  background: rgba(251, 191, 36, 0.15);
+  color: #FBBF24;
+}
+
+.status.approved {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34D399;
+}
+
+.status.rejected,
+.status.banned {
+  background: rgba(239, 68, 68, 0.15);
+  color: #F87171;
+}
+
+.comment-text {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 28rpx;
+  line-height: 1.6;
+  margin-bottom: 20rpx;
+}
+
+.comment-footer {
+  display: flex;
+  align-items: center;
+}
+
+.like-count {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 24rpx;
+}
+
+.no-more {
+  text-align: center;
+  padding: 40rpx 0;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 24rpx;
+}

@@ -1,4 +1,4 @@
-<view class="community-page">
+<view class="community-page {{showMusicBar ? 'has-music-bar' : ''}}">
   <!-- 发布留言 -->
   <view class="post-box">
     <textarea class="input" placeholder="说点什么吧..." value="{{content}}" bindinput="onInput" maxlength="200" />
@@ -27,3 +27,6 @@
     <view wx:if="{{comments.length === 0}}" class="empty">暂无留言</view>
   </view>
 </view>
+
+<!-- 底部播放条 -->
+<music-bar show="{{showMusicBar}}" />

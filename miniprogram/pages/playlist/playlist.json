@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "歌单"
+  "navigationBarTitleText": "歌单",
+  "usingComponents": {
+    "music-bar": "/components/music-bar/music-bar"
+  }
 }

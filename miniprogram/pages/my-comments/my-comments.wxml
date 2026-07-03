@@ -1,0 +1,61 @@
+<view class="my-comments-page">
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'community' ? 'active' : ''}}" bindtap="switchTab" data-tab="community">
+      <text>乐语留言</text>
+    </view>
+    <view class="tab-item {{activeTab === 'song' ? 'active' : ''}}" bindtap="switchTab" data-tab="song">
+      <text>歌曲留言</text>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+  <view wx:elif="{{comments.length === 0}}" class="empty">
+    <text class="empty-icon">📝</text>
+    <text class="empty-text">暂无留言记录</text>
+  </view>
+  <view wx:else class="comment-list">
+    <!-- 乐语留言 -->
+    <view wx:if="{{activeTab === 'community'}}" class="comment-item {{item.status === 2 ? 'violation' : ''}}" wx:for="{{comments}}" wx:key="id">
+      <view class="violation-overlay" wx:if="{{item.status === 2}}">
+        <text class="violation-text">此留言违规</text>
+      </view>
+      <view class="comment-main">
+        <view class="comment-header">
+          <text class="time">{{item.createTime}}</text>
+          <text class="status {{item.status === 0 ? 'pending' : item.status === 1 ? 'approved' : 'rejected'}}">
+            {{item.status === 0 ? '待审核' : item.status === 1 ? '已通过' : '未通过'}}
+          </text>
+        </view>
+        <view class="comment-text">{{item.content}}</view>
+        <view class="comment-footer">
+          <text class="like-count">❤️ {{item.likes}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 歌曲留言 -->
+    <view wx:if="{{activeTab === 'song'}}" class="song-comment-item" wx:for="{{comments}}" wx:key="id">
+      <view class="violation-overlay" wx:if="{{item.status === 0}}">
+        <text class="violation-text">已封禁</text>
+      </view>
+      <view class="song-comment-main">
+        <view class="song-info">
+          <text class="song-title">{{item.songTitle}}</text>
+          <text class="song-artist">{{item.songArtist}}</text>
+        </view>
+        <view class="comment-header">
+          <text class="time">{{item.createTime}}</text>
+          <text class="status {{item.status === 1 ? 'approved' : 'banned'}}">
+            {{item.status === 1 ? '正常' : '已封禁'}}
+          </text>
+        </view>
+        <view class="comment-text">{{item.content}}</view>
+        <view class="comment-footer">
+          <text class="like-count">👍 {{item.likes}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{!hasMore && comments.length > 0}}" class="no-more">没有更多了</view>
+  </view>
+</view>

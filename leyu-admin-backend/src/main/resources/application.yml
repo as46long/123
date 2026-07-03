@@ -30,6 +30,10 @@ file:
   upload-path: ./uploads/
   access-url: http://localhost:8080/files/
 
+wechat:
+  appid: wxae47d797a849feb6
+  secret: a5786cec5da916defbf46f0b03eeeeb5
+
 knife4j:
   enable: true
   setting:
